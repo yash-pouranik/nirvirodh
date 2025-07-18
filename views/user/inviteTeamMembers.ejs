@@ -1,0 +1,140 @@
+<% layout("/layout/boilerplate") %>
+
+<style>
+    .suggestions-list {
+  list-style: none;
+  background: #0D0D0D;
+  border: 1px solid #8B5CF6;
+  margin: 0;
+  padding: 0.5rem;
+  max-height: 150px;
+  overflow-y: auto;
+  position: absolute;
+  z-index: 100;
+  width: 100%;
+  border-radius: 5px;
+}
+
+.suggestions-list li {
+  padding: 0.5rem;
+  cursor: pointer;
+
+}
+
+.suggestions-list li:hover {
+  background-color: #8B5CF6;
+  color: white;
+}
+
+.email-input{
+    margin-top: 1rem;
+}
+
+
+</style>
+
+
+
+<h1 style="text-align: center; font-weight: 100; font-size:4.6vmax; margin-bottom: 2rem;" class="animate-heading">.Nirvirodh</h1>
+  <form action="/sendInviteMail" method="post" class="auth-form">
+    <h2 style="text-align: center;"><%= team.teamName %></h2>
+    <h3>Invite Members</h3>
+    <% for(let i = 0; i < team.maxMembers; i++) { 
+     const member = team.members[i];
+%>
+  <div class="input-wrapper" style="position: relative;">
+    <% if (member) { %>
+      <!-- Existing member, pre-filled and disabled -->
+      <input 
+        type="email" 
+        class="email-input" 
+        value="<%= member.email %>" 
+        disabled 
+        style=" color: #aaa;"
+      />
+    <% } else { %>
+      <!-- Empty slot, allow input -->
+      <input 
+        type="email" 
+        class="email-input" 
+        id="email-input-<%= i %>" 
+        name="email<%= i %>" 
+        placeholder="Member <%= i+1 %> Email" 
+        autocomplete="off" 
+         
+      />
+      <ul class="suggestions-list" id="suggestions-<%= i %>"></ul>
+    <% } %>
+  </div>
+<% } %>
+
+  <input type="hidden" name="t_id" value="<%= team._id %>" />
+
+
+    <button type="submit" class="btn-hoverr">Invite</button>
+    <p style="text-align:center;">Already have a team? <a href="/join">Join</a></p>
+  </form>
+
+
+    <script>
+    // 🔁 Helper: Get all filled email values
+    const getAllSelectedEmails = () => {
+        return Array.from(document.querySelectorAll('.email-input'))
+        .map(inp => inp.value.trim().toLowerCase())
+        .filter(email => email);
+    };
+
+    const inputs = document.querySelectorAll('.email-input');
+
+    inputs.forEach(input => {
+        const index = input.id.split('-')[2]; // get index from id
+        const suggestionBox = document.getElementById(`suggestions-${index}`);
+        let timeout;
+
+        input.addEventListener('input', () => {
+        clearTimeout(timeout);
+        const query = input.value.trim();
+        if (!query) {
+            suggestionBox.innerHTML = '';
+            return;
+        }
+
+        timeout = setTimeout(() => {
+            fetch(`/searchEmails?q=${encodeURIComponent(query)}`)
+            .then(res => res.json())
+            .then(data => {
+                suggestionBox.innerHTML = '';
+
+                const selectedEmails = getAllSelectedEmails();
+
+                const filtered = data.filter(email =>
+                !selectedEmails.includes(email.toLowerCase()) ||
+                email.toLowerCase() === input.value.toLowerCase()
+                );
+
+                filtered.forEach(email => {
+                const li = document.createElement('li');
+                li.textContent = email;
+                li.style.cursor = "pointer";
+                li.style.padding = "0.5rem";
+
+                // Prevent blur conflict
+                li.addEventListener('mousedown', (e) => {
+                    e.preventDefault();
+                    input.value = email;
+                    suggestionBox.innerHTML = '';
+                });
+
+                suggestionBox.appendChild(li);
+                });
+            });
+        }, 600); // debounce
+        });
+
+        // Allow time for click before clearing
+        input.addEventListener('blur', () => {
+        setTimeout(() => suggestionBox.innerHTML = '', 200);
+        });
+    });
+    </script>
+

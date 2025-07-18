@@ -1,0 +1,13 @@
+<% layout("layout/boilerplate") %>
+
+<div class="container">
+    <h1 style="text-align: center; font-weight: 100; font-size:4.6vmax; margin-bottom: 2rem;" class="animate-heading">.Nirvirodh</h1>
+  <form action="/signup" method="POST" class="auth-form">
+    <h2 style="text-align: center;">Sign Up</h2>
+    <input type="text" name="username" placeholder="Username" required />
+    <input type="email" name="email" placeholder="Email" required />
+    <input type="password" name="password" placeholder="Password" required />
+    <button type="submit" class="btn-hoverr">Create Account</button>
+    <p style="text-align:center;">Already have an account? <a href="/login">Login</a></p>
+  </form>
+</div>

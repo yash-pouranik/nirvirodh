@@ -1,0 +1,240 @@
+body {
+  /* font-family: 'Orbitron', sans-serif !important; */
+  font-family: 'Fira Code', monospace !important;
+  color: white !important;
+  background-color: #0D0D0D !important;
+}
+
+a{
+  text-decoration: none !important;
+}
+
+.container{
+    padding: 2rem;
+    
+}
+
+
+.glow-card{
+    background-color: #1a1a1a !important;
+    padding: 0.6rem;
+    border: 0.1px solid white;
+    box-shadow: 0 0 70px #8a5cf652;
+}
+
+
+
+
+.hero-section p{
+  margin-bottom: 2rem;
+  font-size: 1.5vmax !important;
+  letter-spacing: 2px;
+}
+
+.hero-section{
+  display: flex;
+  justify-content: center;
+  /* background-color: #141414a4 !important; */
+  padding: 5vmin;
+  border-radius: 20px;
+}
+
+
+.s-left{
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+}
+
+.features{
+  display: flex;
+  justify-content: center;
+  /* background-color: #141414a4 !important; */
+  border-radius: 20px;
+  margin: 4vmax 0 4vmax 0;
+  flex-wrap: wrap;
+  padding: 3vmax 0 3vmax 0;
+}
+
+.feature-box{
+  width: 350px;;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  background-color: #0D0D0D !important;
+  padding: 2vmax;
+  margin: 1vmax;
+  border-radius: 10px;
+  box-shadow: 0 0 10px #00ffff30;
+}
+
+/* animation brand logo name */
+@keyframes slideFromBottom {
+  0% {
+    opacity: 0;
+    transform: translateY(50px);
+  }
+  100% {
+    opacity: 1;
+    transform: translateY(0);
+  }
+}
+
+.animate-heading {
+  animation: slideFromBottom 1.2s ease-out forwards;
+  letter-spacing: -0.2vmax !important;
+}
+
+.animate-heading span{
+  margin: 0 !important;
+  padding: 0 !important;
+  letter-spacing: 0 !important;
+}
+
+.animate-heading span:hover{
+  color: #8B5CF6;
+  cursor: pointer;
+}
+
+.why-section{
+  /* background-color: #141414a4 !important; */
+  padding: 4vmax;
+  border-radius: 8px;
+}
+
+
+.why-section ul {
+  list-style: none;
+  padding: 0;
+  color: white;
+  text-align: left;
+}
+
+.why-section li {
+  margin: 1rem 0;
+  margin-left: 1.5rem;
+  font-size: 1.1rem;
+}
+
+
+.footer {
+  text-align: center;
+  padding: 1rem;
+  color: gray;
+  font-size: 0.9rem;
+}
+
+/* authentication */
+.auth-form {
+  background-color: #141414a4;
+  padding: 3vmax;
+  border-radius: 12px;
+  max-width: 400px;
+  margin: auto;
+  box-shadow: 0 0 10px #8B5CF6;
+  display: flex;
+  flex-direction: column;
+  gap: 1rem;
+}
+
+.auth-form input,
+.auth-form button{
+  color: #8B5CF6 !important;
+  padding: 1rem;
+  border: none;
+  border-radius: 8px;
+  background-color: transparent;
+  border-bottom: 0.7px solid white;
+  font-family: 'Orbitron', sans-serif;
+}
+
+.auth-form button {
+  background-color: #00BFFF;
+  color: black ;
+  background-color: white !important;
+  font-weight: bold;
+  cursor: pointer;
+
+}
+
+.auth-form select {
+  background-color: #0D0D0D;
+  color: white;
+  border: 2px solid #8B5CF6;
+  border-radius: 8px;
+  padding: 1rem;
+  font-family: 'Orbitron', sans-serif;
+  font-size: 1rem;
+  cursor: pointer;
+  outline: none;
+  transition: border 0.3s ease;
+}
+
+.auth-form select:focus {
+  border-color: #00FFFF;
+  box-shadow: 0 0 10px #00FFFF60;
+}
+
+
+
+.nir-clas{
+  background-color: transparent !important;
+  color: #8B5CF6 !important;
+}
+
+
+
+.btnn {
+  border: none;
+  width: 15em;
+  height: 5em;
+  border-radius: 3em;
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  gap: 12px;
+  background: #1C1A1C ;
+  cursor: pointer;
+  transition: all 450ms ease-in-out;
+}
+
+.sparkle {
+  fill: #AAAAAA;
+  transition: all 800ms ease;
+}
+
+.text {
+  font-weight: 600;
+  color: #AAAAAA;
+  font-size: medium;
+}
+
+.btnn:hover {
+  background: linear-gradient(0deg,#8B5CF6,#683FEA);
+  box-shadow: inset 0px 1px 0px 0px rgba(255, 255, 255, 0.4),
+  inset 0px -4px 0px 0px rgba(0, 0, 0, 0.2),
+  0px 0px 0px 4px rgba(255, 255, 255, 0.2),
+  0px 0px 180px 0px #9917FF;
+  transform: translateY(-2px);
+}
+
+.btnn:hover .text {
+  color: white;
+}
+
+.btnn:hover .sparkle {
+  fill: white;
+  transform: scale(1.2);
+}
+
+.free-now{
+  padding: 8px;
+  background-color: rgb(0, 255, 0);
+  color: black;
+  cursor: pointer;
+}
+
+.locked-now{
+  background-color: red;
+  padding: 8px;
+}

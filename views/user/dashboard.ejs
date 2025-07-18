@@ -1,0 +1,79 @@
+<% layout("/layout/boilerplate") %>
+
+<style>
+  .badge{
+    color: #3e0035 ;
+  }
+  @media (max-width: 767px) {
+    .allInfo{
+      width: 100%;
+    }
+  }
+</style>
+
+<h1 style="text-align: center; font-weight: 100; font-size:4.6vmax;" class="animate-heading"><%= currUser.username %></h1>
+<div class="dashboard">
+  
+  <div class="allInfo">
+    <!-- User Info Card -->
+    <div class="userInfo">
+      <div class="uName"><strong>Name:</strong> <%= currUser.username %></div>
+      <div class="uEmail"><strong>Email:</strong> <%= currUser.email %></div>
+
+      
+    </div>
+
+    <!-- Overview Card -->
+    <div class="teamOverview">
+      <h4>Your Teams</h4>
+      <p>
+        <% if (currUser.teamsJoined.length === 0) { %>
+        <div class="alert alert-primary mt-3" role="alert">
+            No teams joined or created yet.
+        </div>
+        <% } else { %>
+        <div class="team-list mt-3">
+            <% for(team of teams) { %>
+                <a href="/dashboard/team/<%= team._id %>">
+                  <div class="eachTeam">
+                    
+                    <%= team.teamName %>
+                    <% if(team.leader.toString() === currUser._id.toString()) {%>
+                      <span class="badge">ADMIN</span>
+                    <% } %>
+                </div>
+                </a>
+            <% } %>
+
+        </div>
+        <% } %>
+
+      </p>
+    </div>
+  </div>
+
+  <!-- Teams Sidebar or Projects Panel -->
+  <div class="teams">
+    <h4>Repositeries</h4>
+    <% if (teams.length === 0) { %>
+        <p>No projects yet. Join or create a team to start!</p>
+    <% } else { %>
+        <% teams.forEach(team => { %>
+        <div class="">
+            
+            <% if (team.project.length === 0) { %>
+            <p class="text-muted" style="color: white !important;">No projects added in <strong class="glow-card"><%= team.teamName %></strong></p>
+            <% } else { %>
+            <ul>
+                <% team.project.forEach(proj => { %>
+                <a href="/team/<%= team._id %>/project/<%= proj._id %>">
+                  <li class="eachTeam"><%= proj.projName %> - <strong><%= team.teamName %></strong></li>
+                </a>
+                <% }) %>
+            </ul>
+            <% } %>
+        </div>
+        <% }) %>
+    <% } %>
+  </div>
+</div>

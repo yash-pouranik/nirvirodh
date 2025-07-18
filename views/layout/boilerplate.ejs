@@ -1,0 +1,47 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Nirvirodh</title>
+    <link rel="stylesheet" href="/css/style.css">
+    <link rel="stylesheet" href="/css/nav.css">
+    <link rel="stylesheet" href="/css/dashboard.css">
+
+    
+
+    <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.7/dist/css/bootstrap.min.css" rel="stylesheet" integrity="sha384-LN+7fdVzj6u52u30Kp6M/trliBMCMKTyK833zpbD+pXdCLuTusPj697FH4R/5mcr" crossorigin="anonymous">
+
+    <!-- font -->
+    <link href="https://fonts.googleapis.com/css2?family=Orbitron&display=swap" rel="stylesheet">
+    <link href="https://fonts.googleapis.com/css2?family=Fira+Code&display=swap" rel="stylesheet">
+
+</head>
+<body>
+
+
+        <%- include("../includes/nav.ejs") %>
+    
+        <div class="container">
+            <% if (error && error.length) { %>
+                <div class="alert alert-danger">
+                <%= error[0] %>
+            </div>
+        <% } else if(success && success.length) {%>
+            <div class="alert alert-success">
+                <%= success[0] %>
+            </div>
+        <% } %>
+    
+            <%- body %>
+
+            <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.7/dist/js/bootstrap.bundle.min.js" integrity="sha384-ndDqU0Gzau9qJ1lfW4pNLlhNTkCfHzAVBReH9diLvGRem5+R9g2FzA8ZGN954O5Q" crossorigin="anonymous"></script>
+        </div>
+        <%- include("../includes/footer.ejs") %>
+
+
+
+        <script src="/socket.io/socket.io.js"></script>
+        <script src="/js/socket.js"></script>
+</body>
+</html>

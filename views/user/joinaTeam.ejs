@@ -1,0 +1,118 @@
+<% layout("/layout/boilerplate") %>
+
+<style>
+  .join-team-form {
+    max-width: 500px;
+    margin: auto;
+    background-color: #1e1e1e;
+    padding: 2rem;
+    border-radius: 10px;
+    color: white;
+    box-shadow: 0 0 30px rgba(139, 92, 246, 0.3);
+    position: relative;
+  }
+
+  .join-team-form h2 {
+    text-align: center;
+    color: #8B5CF6;
+    margin-bottom: 1.5rem;
+  }
+
+  .join-team-form input {
+    width: 100%;
+    padding: 0.75rem;
+    margin-bottom: 1rem;
+    border: none;
+    border-radius: 5px;
+    outline: none;
+  }
+
+  .join-team-form button {
+    background-color: #8B5CF6;
+    color: white;
+    width: 100%;
+    padding: 0.75rem;
+    border: none;
+    border-radius: 5px;
+    font-weight: bold;
+  }
+
+  .suggestions-list {
+    list-style: none;
+    background: #0D0D0D;
+    border: 1px solid #8B5CF6;
+    margin: 0;
+    padding: 0.5rem;
+    max-height: 150px;
+    overflow-y: auto;
+    position: absolute;
+    z-index: 100;
+    width: 100%;
+    border-radius: 5px;
+    top: 100%; /* Just below the input */
+  left: 0;
+  }
+
+  .suggestions-list li {
+    padding: 0.5rem;
+    cursor: pointer;
+  }
+
+  .suggestions-list li:hover {
+    background-color: #8B5CF6;
+    color: white;
+  }
+</style>
+
+<div class="join-team-form">
+  <h2>Join a Team</h2>
+  <form action="/join" method="POST">
+    <div style="position: relative;">
+      <input type="text" 
+      name="teamName" 
+      id="teamName" 
+      placeholder="Enter Team Name" 
+      autocomplete="off" 
+      value="<%= typeof prefillTeam !== 'undefined' ? prefillTeam : '' %>" 
+      required />
+      <ul id="team-suggestions" class="suggestions-list"></ul>
+    </div>
+    <button type="submit">Join Team</button>
+  </form>
+</div>
+
+<script>
+  const teamInput = document.getElementById("teamName");
+  const suggestionsBox = document.getElementById("team-suggestions");
+
+  teamInput.addEventListener("input", () => {
+    const query = teamInput.value.trim();
+
+    if (!query) {
+      suggestionsBox.innerHTML = "";
+      return;
+    }
+
+    fetch(`/searchTeams?q=${encodeURIComponent(query)}`)
+      .then(res => res.json())
+      .then(teams => {
+        suggestionsBox.innerHTML = "";
+        teams.forEach(name => {
+          const li = document.createElement("li");
+          li.textContent = name;
+          li.addEventListener("mousedown", (e) => {
+            e.preventDefault();
+            teamInput.value = name;
+            suggestionsBox.innerHTML = "";
+          });
+          suggestionsBox.appendChild(li);
+        });
+      });
+  });
+
+  teamInput.addEventListener("blur", () => {
+    setTimeout(() => {
+      suggestionsBox.innerHTML = "";
+    }, 200);
+  });
+</script>

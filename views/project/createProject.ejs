@@ -1,0 +1,55 @@
+<% layout("/layout/boilerplate") %>
+
+
+
+<style>
+
+
+  .add-project-form {
+    max-width: 600px;
+    margin: auto;
+    background-color: #1e1e1e;
+    padding: 2rem;
+    border-radius: 10px;
+    color: white;
+    box-shadow: 0 0 70px #8a5cf652;
+  }
+
+  .add-project-form h2 {
+    text-align: center;
+    color: #8B5CF6;
+    margin-bottom: 2rem;
+  }
+
+  .add-project-form input,
+  .add-project-form textarea {
+    width: 100%;
+    padding: 0.75rem;
+    margin-bottom: 1rem;
+    background-color: #2c2c2c;
+    border: none;
+    color: white;
+    border-radius: 5px;
+    font-size: 1rem;
+  }
+
+  .add-project-form button {
+    background-color: #8B5CF6;
+    color: white;
+    width: 100%;
+    padding: 0.75rem;
+    border: none;
+    border-radius: 5px;
+    font-weight: bold;
+    font-size: 1rem;
+  }
+</style>
+
+<div class="add-project-form">
+  <h2>Add New Project</h2>
+  <form action="/dashboard/team/<%= teamId %>/project/new" method="POST">
+    <input type="text" name="projName" placeholder="Project Name" required />
+    <textarea name="projDescription" rows="4" placeholder="Project Description"></textarea>
+    <button type="submit">Add Project</button>
+  </form>
+</div>

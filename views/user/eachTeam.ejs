@@ -1,0 +1,147 @@
+<% layout("/layout/boilerplate") %>
+
+<style>
+  .team-block {
+    background-color: #1e1e1e;
+    border-radius: 15px;
+    padding: 3vmax;
+    margin-top: 2rem;
+    color: #fff;
+    border: 0.5px solid white;
+    box-shadow: 0 0 70px #8a5cf652;
+  }
+
+  .team-name h2 {
+    margin-bottom: 1rem;
+    font-size: 3vmax;
+    color: #8B5CF6;
+    border-bottom: 1px solid #8B5CF630;
+    padding-bottom: 1rem;
+  }
+
+  .team-info span {
+    display: block;
+    margin-bottom: 1.2rem;
+    font-size: 1.1rem;
+    color: #ccc;
+  }
+
+  .team-info strong {
+    color: #fff;
+    font-weight: 500;
+    letter-spacing: 1px;
+  }
+
+  .members {
+    margin-top: 1rem;
+    padding: 1rem;
+    background-color: #141414;
+    border-radius: 8px;
+    border: 1px solid #333;
+  }
+
+  .members span {
+    display: block;
+    padding: 0.4rem 0;
+    border-bottom: 1px dashed #2a2a2a;
+  }
+
+  .members span:last-child {
+    border-bottom: none;
+  }
+
+  .projects {
+    margin-top: 2rem;
+    padding: 1.5rem;
+    background-color: #141414;
+    border-radius: 8px;
+    border: 1px solid #333;
+  }
+
+  .projects strong {
+    display: block;
+    margin-bottom: 1rem;
+    font-size: 1.2rem;
+    color: #fff;
+  }
+
+  .project-item {
+    background-color: #1f1f1f;
+    padding: 0.75rem 1rem;
+    margin-bottom: 0.6rem;
+    border-radius: 6px;
+    border-left: 3px solid #8B5CF6;
+    color: #ccc;
+  }
+
+  .project-item:last-child {
+    margin-bottom: 1rem;
+  }
+
+  .projects .add-btn {
+    background-color: transparent;
+    border: 1px dashed #8B5CF6;
+    color: #86dffc;
+    padding: 0.5rem 1rem;
+    border-radius: 5px;
+    margin-top: 1rem;
+    transition: all 0.3s;
+  }
+
+  .projects .add-btn:hover {
+    background-color: #8B5CF6;
+    color: white;
+  }
+</style>
+
+<div class="team-block">
+
+  <!-- Team Name -->
+  <div class="team-name">
+    <h2><%= team.teamName %></h2>
+  </div>
+
+  <!-- Team Info -->
+  <div class="team-info">
+    <span><strong>👥 Max Team Size:</strong> <%= team.maxMembers %></span>
+    <span><strong>⭐ Team Leader:</strong> <%= team.leader.username %></span>
+  </div>
+
+  <!-- Members -->
+  <div class="members">
+    <strong>Members:</strong>
+    <% team.members.forEach(member => { %>
+      <span style="font-size: 1.5vmax;">👤 <%= member.username %> — <%= member.email %></span>
+    <% }) %>
+  </div>
+
+  <!-- Projects -->
+  <div class="projects">
+    <strong>📁 Projects</strong>
+
+    <% if (team.project.length === 0) { %>
+      <p style="color: #aaa;">No projects added</p>
+    <% } else { %>
+      <% team.project.forEach(proj => { %>
+        <a href="/team/<%= team._id %>/project/<%= proj._id %>">
+          <div class="project-item">
+            <%= proj.projName %>
+          </div>
+        </a>
+      <% }) %>
+    <% } %>
+
+    <form action="/dashboard/team/<%= team._id %>/project/new" method="get">
+      <button type="submit" class="add-btn">+ Add Project</button>
+    </form>
+  </div>
+
+  <!-- Invite Members (Leader Only) -->
+  <% if (currUser && currUser._id.toString() === team.leader._id.toString()) { %>
+    <form action="/inviteMembers" method="get">
+      <input type="hidden" name="t_id" value="<%= team._id %>" />
+      <button type="submit" class="btn form-btn" style="color: #86dffc;">Invite Members</button>
+    </form>
+  <% } %>
+
+</div>

@@ -1,0 +1,17 @@
+<% layout("/layout/boilerplate") %>
+
+    <h1 style="text-align: center; font-weight: 100; font-size:4.6vmax; margin-bottom: 2rem;" class="animate-heading">.Nirvirodh</h1>
+  <form action="/create" method="post" class="auth-form">
+    <h2 style="text-align: center;">Create Your own team</h2>
+    <input type="text" name="teamName" placeholder="Team name" required />
+    <input type="number" name="maxMembers" placeholder="number of members" required min="1" max="10"/>
+    <select name="orgType" required>
+        <option value="">Select Organization Type</option>
+        <option value="student">🎓 Student Project / College Team</option>
+        <option value="openSource">🌍 Open Source Project</option>
+        <option value="startup">🚀 Startup / Freelance Team</option>
+        <option value="other">📁 Other</option>
+    </select>
+    <button type="submit" class="btn-hoverr">Create Team</button>
+    <p style="text-align:center;">Already have a team? <a href="/join">Join</a></p>
+  </form>

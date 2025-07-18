@@ -1,0 +1,53 @@
+<nav>
+    <div class="left">
+        <span class="logo">
+            nirvirodh
+        </span>
+        <% if(currUser) { %>
+            <span class="nav-links"><a href="/dashboard">dashboard</a></span>
+        <% } %>
+    </div>
+    <div class="right">
+        <span class="nav-links"><a href="/">Home</a></span>
+        <span class="nav-links"><a href="/create">Create Your Team</a></span>
+        <span class="nav-links"><a href="/join">Join in a Team</a></span>
+        <% if(!currUser) { %>
+            <span class="nav-links"><a href="/login">Login</a></span>
+        <% } else{%>
+            <span class="nav-links"><a href="/notifications">Notifications</a></span>
+            <span class="nav-links"><a href="/logout">Logout</a></span>
+        <% } %>
+    </div>
+
+    
+
+    <button class="btn btn-nav" onclick="collapseOnClick()" style="font-family: 'Orbitron', sans-serif !important;">
+        OO
+    </button>
+
+</nav>
+
+<div class="collapse-nav" style="display: none;">
+        <span class="c-nav-links"><a href="/">Home</a></span>
+        <span class="c-nav-links"><a href="/create">Create Your Team</a></span>
+        <span class="c-nav-links"><a href="/join">Join in a Team</a></span>
+        <% if(!currUser) { %>
+            <span class="c-nav-links"><a href="/login">Login</a></span>
+        <% } else {%>
+            <span class="c-nav-links"><a href="/notifications">notifications</a></span>
+            <span class="c-nav-links"><a href="/logout">logout</a></span>
+        <% } %>
+</div>
+
+<script>
+    function collapseOnClick() {
+        let c_nav = document.getElementsByClassName("collapse-nav");
+        if(c_nav[0].style.display == "none") {
+            c_nav[0].style.display = "flex";
+
+        } else{
+            c_nav[0].style.display = "none";
+
+        }   
+    }
+</script>

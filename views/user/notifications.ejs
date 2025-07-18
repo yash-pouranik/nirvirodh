@@ -1,0 +1,47 @@
+<% layout("/layout/boilerplate") %>
+
+<style>
+  .notifications{
+
+    padding: 1rem;
+
+  }
+</style>
+
+<div class="notifications glow-card">
+  <h2 class="mb-4">🔔 Join Requests</h2>
+  <hr>
+  <% if (notifications &&  notifications.length === 0) { %>
+    <p>No pending notifications.</p>
+  <% } else { %>
+    <% notifications.forEach(n => { %>
+      <% if(n.type === "join_request" && n.status === "pending") {%>
+        <div class="mb-3 p-3 info-highlight-box">
+          <p><strong><%= n.sender.username %></strong> wants to join <strong><%= n.team.teamName %></strong></p>
+          <form action="/notifications/<%= n._id %>/respond?_method=PUT" method="POST" class="d-flex gap-2">
+            <input type="text" name="teamId" value="<%= n.team._id %>" hidden>
+            <input type="text" name="requestedUser" value="<%= n.sender._id %>" hidden>
+            <button name="response" value="accept" class="btn btn-success btn-sm">Accept</button>
+            <button name="response" value="reject" class="btn btn-danger btn-sm">Reject</button>
+          </form>
+        </div>
+      <% } else if(n.type === "req_rejected") {%>
+        <div class="mb-3 p-3 info-highlight-box">
+          <p><strong><%= n.sender.username %></strong> rejected your request to join the team <strong><%= n.team.teamName %></strong></p>
+          <form action="/notifications/<%= n._id %>/markread?_method=PUT" method="POST" class="d-flex gap-2">
+            
+            <button name="status" value="markedAsRead" class="btn btn-danger btn-sm">Mark as read.</button>
+          </form>
+        </div>
+        
+      <% } else if(n.type === "project_started") {%>
+        <div class="mb-3 p-3 info-highlight-box">
+          <p><strong><%= n.sender.username %></strong> has started the project <%= n.team.teamName %> join now</p>
+          <form action="/notifications/<%= n._id %>/markread?_method=PUT" method="POST" class="d-flex gap-2">
+            <button name="status" value="markedAsRead" class="btn btn-danger btn-sm">Mark as read.</button>
+          </form>
+        </div>
+      <% } %>
+    <% }) %>
+  <% } %>
+</div>

@@ -1,0 +1,210 @@
+<% layout('layout/boilerPlate') -%>
+
+<style>
+  .project-block {
+    background-color: #111111;
+    border-radius: 15px;
+    padding: 3vmax;
+    margin-top: 2rem;
+    color: #fff;
+    border: 0.5px solid white;
+    box-shadow: 0 0 70px #8a5cf652;
+  }
+
+  .proj-name {
+    color: #7300ff;
+  }
+
+  .info-highlight-box {
+    background-color: #3e0035;
+    padding: 0.75rem 1rem;
+    margin-bottom: 0.6rem;
+    border-radius: 6px;
+    border-left: 3px solid #8B5CF6;
+    color: #ccc;
+  }
+
+  .add-file-form {
+    display: none;
+    position: fixed;
+    z-index: 1000;
+    left: 50%;
+    top: 50%;
+    transform: translate(-50%, -50%);
+    background-color: #1f1f1f;
+    padding: 2rem;
+    border-radius: 10px;
+    border: 1px solid white;
+    box-shadow: 0 0 70px #4c00ff52;
+    width: 80%;
+    max-width: 500px;
+  }
+
+  .add-file-form input {
+    padding: 0.4rem;
+    background-color: transparent;
+    color: white;
+    border: none;
+    border-bottom: 1px solid white;
+    margin-bottom: 1rem;
+    width: 100%;
+  }
+
+  .btn {
+    padding: 0.5rem 1rem;
+    background-color: #7300ff;
+    border: none;
+    color: white;
+    border-radius: 6px;
+    cursor: pointer;
+  }
+
+  .glow-card {
+    background-color: #8b5cf6;
+    transition: all 0.3s ease-in-out;
+    box-shadow: 0 0 5px #8b5cf6;
+  }
+
+  .glow-card:hover {
+    background-color: black;
+    color: white;
+    box-shadow: 0 0 25px #8b5cf6;
+  }
+  .file-li{
+    min-height: 7rem;
+    background-color: #1d1d1d;
+    display: flex;
+    margin-top: 1rem;
+    padding: 10px;
+    flex-direction: column;
+  }
+  .file-info{
+    display: flex;
+    justify-content: flex-start;
+    align-items: center;
+    flex-wrap: wrap;
+  }
+  .file-info-grid {
+  display: grid;
+  grid-template-columns: 1fr 1fr;
+  gap: 8px 16px;
+  margin-top: 10px;
+  color: #ddd;
+  font-size: 0.9rem;
+}
+
+.info-label {
+  font-weight: 600;
+  color: #a0a0a0;
+  margin-right: 5px;
+}
+
+.isfree{
+  display: flex;
+  align-items: center;
+
+}
+.takeAccess{
+  padding: 0.5rem;
+  border: none;
+  margin-left: 5px;
+  background-color: #7300ff;
+  color: white;
+}
+
+</style>
+
+<div class="project-block">
+  <h2 class="proj-name"><%= project.projName %></h2>
+  <p class="info-highlight-box"><%= project.description %></p>
+  <p class="info-highlight-box"><strong>Team:</strong> <%= project.team.teamName %></p>
+
+  <hr>
+
+  <h4>Files:</h4>
+  <% if (files.length === 0) { %>
+    <p>No files in this project yet.</p>
+  <% } else { %>
+    <% if(project.isWorking) {%>
+      <form action="/project/<%= project._id %>/stop?_method=PUT" method="post">
+        <button type="submit" class="btn glow-card">take a nap!</button>
+      </form>
+    <% } else{%>
+      <form action="/project/<%= project._id %>/start?_method=PUT" method="post">
+        <button type="submit" class="btn glow-card">Wake up! Start Working</button>
+      </form>
+    <% } %>
+    <div style="margin-bottom: 1rem;">
+        <% files.forEach(file => { %>
+        <li class="file-li glow-card" style="box-shadow: none;">
+                    
+            <div style="display: flex; justify-content: space-between; align-items: center;">
+              <p><strong><%= file.fileName %> </strong></p>
+              <% if(project.isWorking) {%>
+                <% if (file.isLocked) { %>
+                  <div class="isfree">
+                    <span class="locked-now">Locked</span>
+
+                    <% if (file.lockedBy && file.lockedBy._id.toString() === currUser._id.toString()) { %>
+                      <form action="/file/leaveaccess/<%= file._id %>?_method=PUT" class="take-access" method="post">
+                        <button class="takeAccess" style="background-color: crimson;">Leave Access</button>
+                      </form>
+                    <% } %>
+                  </div>
+                <% } else { %>
+                  <div class="isfree">
+                    <span class="free-now">Free</span>
+                    <% let fId = file._id %>
+                      <form action="/file/takeaccess/<%= fId %>?_method=PUT"  class="take-access" method="post">
+                        <button class="takeAccess" style="color: white;">take Access</button>
+                    </form>
+                  </div>
+                <% } %>
+              <% } %>
+            </div>
+            <hr>
+
+            <div class="file-info-grid">
+                <div><span class="info-label">🔒 Locked By:</span> <span><%= file.lockedBy ? file.lockedBy.username : "None" %></span></div>
+                <div><span class="info-label">✏️ Last Edited By:</span> <span><%= file.lastEditedBy ? file.lastEditedBy.username : "None" %></span></div>
+                <div><span class="info-label">🕒 Created:</span> <span><%= file.createdAt.toLocaleString() %></span></div>
+                <div><span class="info-label">♻️ Updated:</span> <span><%= file.updatedAt.toLocaleString() %></span></div>
+            </div>
+
+        </li>
+        <% }) %>
+
+    </div>
+  <% } %>
+
+  <button class="btn glow-card" onclick="addFile()">Add files</button>
+
+    <form action="/team/<%= project.team._id %>/project/<%= project._id %>/file" style="display: none;" class="add-file-form glow-card" method="post">
+        <div style="text-align: right;">
+            <button type="button" class="btn btn-close" onclick="closeFileForm()"></button>
+        </div>
+        <h2>Add File</h2>
+        <input type="text" placeholder="ex: app.js or utils/nodemailer.js" name="fileName" required>
+        <button class="btn glow-card" style="color: white;">Add file</button>
+    </form>
+
+    <input type="hidden" id="teamId" value="<%= project.team._id %>">
+
+
+</div>
+
+<script>
+  function addFile() {
+    let fileForm = document.getElementsByClassName("add-file-form")[0];
+    fileForm.style.display = "inline-block";
+    console.log(fileForm)
+  }
+
+  function closeFileForm() {
+    let fileForm = document.getElementsByClassName("add-file-form")[0];
+    fileForm.style.display = "none";
+    console.log(fileForm)
+  }
+
+</script>
+

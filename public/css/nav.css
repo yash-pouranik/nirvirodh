@@ -1,0 +1,131 @@
+nav{
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    padding: 2rem;
+}
+
+.logo{
+    font-size: 4.5vmin;
+    
+}
+
+.right{
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+}
+
+span a{
+    text-decoration: none !important;
+    color: #86dffc;
+    padding: 1rem !important;
+}
+
+.nav-links{
+    font-weight: 100;
+    padding: 0.4rem;
+    font-size: 2.2vmin;
+    border-bottom-right-radius: 20px;
+    margin-right: 1rem;
+}
+
+.nav-links a {
+  transition: all 0.3s ease;
+  padding: 0.5rem 1rem;
+  border-radius: 6px;
+}
+
+.nav-links a:hover {
+  background-color: transparent;
+  color: #8B5CF6;
+  box-shadow: 0 0 10px #8B5CF6;
+  transform: translateY(-2px);
+}
+
+
+.btn-nav{
+    color: white !important;
+    display: none !important;
+    background-color: white;
+}
+
+.btn-nav:hover{
+    color: #00BFFF !important;
+}
+
+@media (max-width: 1200px) {
+      .right {
+        font-size: 0.8rem;
+        margin-right: 0.7rem;
+
+      }
+      .nav-links a{
+        padding: 0.5rem !important;
+      }      
+}
+
+@media (max-width: 1100px) {
+    .right{
+        display: none !important;
+    }
+    .btn-nav{
+        display: inline !important;
+    }
+    nav{
+        padding-bottom: 1.3rem;
+        margin-bottom: 1.2rem;    
+    }
+}
+
+.collapse-nav{
+    transition: all 0.3s ease;
+    display: flex;
+    
+    flex-direction: column;
+    justify-content: center;
+    margin-left: 1rem;
+    font-size: 3.4vmin;
+    transition: 4s;
+}
+.collapse-nav .c-nav-links{
+    margin: 0.3rem;
+    padding: 0.4rem;
+    border-radius: 10px;
+    width: 50%;
+
+}
+.c-nav-links:hover{
+  background-color: transparent;
+  color: #8B5CF6;
+  box-shadow: 0 0 10px #8B5CF6;
+  transform: translateY(-2px);
+}
+
+.btn-hoverr{
+    transition: all 0.3s ease !important;   
+}
+
+.btn-hoverr:hover{
+    background-color: transparent !important;
+  color: #8B5CF6 !important;
+  box-shadow: 0 0 10px #8B5CF6 !important;
+  transform: translateY(-2px) !important;
+}
+
+.form-btn{
+    margin: 0.7rem !important;
+    padding: 0.4rem;
+    border-radius: 20px !important;
+    font-size: 2vmin;
+    width: 18%;
+
+    transition: all 0.5s ease !important;   
+}
+
+.form-btn:hover{
+background-color: transparent;
+  color: #8B5CF6;
+  box-shadow: 0 0 10px #8B5CF6;
+  transform: translateY(-2px);
+}

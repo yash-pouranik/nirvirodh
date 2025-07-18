@@ -1,0 +1,75 @@
+.dashboard {
+  display: flex;
+  align-items: flex-start; /* previously: center — avoids awkward vertical centering */
+  gap: 2vmax; /* spacing between two sections */
+  padding: 2vmax;
+  flex-wrap: wrap; /* for responsive stacking */
+}
+
+.allInfo {
+  display: flex;
+  flex-direction: column;
+  justify-content: flex-start;
+  align-items: center;
+  width: 40%;
+  min-width: 300px;
+}
+.userInfo, .teamOverview{
+
+    background-color: #1e1e1e;
+    padding: 3vmax;
+    width: 100%;
+    margin-bottom: 3vmax;
+}
+.teams {
+  flex: 1;
+  background-color: #1e1e1e;
+  padding: 3vmax;
+  min-width: 300px;
+}
+.eachTeam {
+  background-color: #a78bfa;
+  color: white;
+  padding: 1rem;
+  margin-bottom: 1rem;
+  border-radius: 10px;
+  font-size: 1.2rem;
+  transition: transform 0.2s ease;
+}
+
+.eachTeam:hover  {
+    background-color: transparent !important;
+  transform: translateY(-3px);
+  box-shadow: 0 0 15px #a78bfa;
+  cursor: pointer;
+}
+
+.eachTeam:hover .badge {
+  color: white;
+}
+
+
+
+.userInfo{
+    border: 0.1px solid white;
+    box-shadow: 0 0 70px #4c00ff52;
+    border-radius: 10px;
+  }
+  .teamOverview{
+    border: 0.1px solid white;
+    box-shadow: 0 0 70px #4c00ff52;
+    border-radius: 10px;
+  }
+  .teams{
+    border: 0.1px solid white;
+    box-shadow: 0 0 70px #ff00f78a;
+    border-radius: 10px;
+  }
+  .uName, .uEmail, .info-highlight-box {
+    background-color: #3e0035 !important;
+    padding: 0.75rem 1rem !important;
+    margin-bottom: 0.6rem !important;
+    border-radius: 10px !important;
+    border-left: 3px solid #8B5CF6 !important;
+    color: #ccc !important;
+  }
