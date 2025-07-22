@@ -1,0 +1,211 @@
+  .project-block {
+    position: relative;
+    background-color: #111;
+    border-radius: 15px;
+    padding: 3vmax;
+    margin-top: 2rem;
+    color: #fff;
+    border: 0.5px solid white;
+    box-shadow: 0 0 70px #8a5cf652;
+  }
+
+  .proj-name {
+    color: #7300ff;
+  }
+
+  .info-highlight-box {
+    background-color: #3e0035;
+    padding: 0.75rem 1rem;
+    margin-bottom: 0.6rem;
+    border-radius: 6px;
+    border-left: 3px solid #8B5CF6;
+    color: #ccc;
+  }
+
+  /* ----- Button & Form Styling ----- */
+  .btn {
+    padding: 0.5rem 1rem;
+    background-color: #7300ff;
+    border: none;
+    color: white;
+    border-radius: 6px;
+    cursor: pointer;
+  }
+
+  .glow-card {
+    background-color: #8b5cf6;
+    box-shadow: 0 0 5px #8b5cf6;
+    transition: all 0.3s ease-in-out;
+  }
+
+  .glow-card:hover {
+    background-color: black;
+    color: white;
+    box-shadow: 0 0 25px #8b5cf6;
+  }
+
+  .add-file-form {
+    display: none;
+    position: fixed;
+    z-index: 1000;
+    left: 50%;
+    top: 50%;
+    transform: translate(-50%, -50%);
+    background-color: #1f1f1f;
+    padding: 2rem;
+    border-radius: 10px;
+    border: 1px solid white;
+    box-shadow: 0 0 70px #4c00ff52;
+    width: 80%;
+    max-width: 500px;
+  }
+
+  .add-file-form input {
+    width: 100%;
+    padding: 0.4rem;
+    background-color: transparent;
+    color: white;
+    border: none;
+    border-bottom: 1px solid white;
+    margin-bottom: 1rem;
+  }
+
+  /* ----- File List Styling ----- */
+  .allFiles {
+    display: flex;
+    flex-wrap: wrap;
+    justify-content: space-between;
+    width: 100%;
+  }
+
+  .eachFile {
+    max-width: 30%;
+  }
+
+  .file-li {
+    background-color: #1d1d1d;
+    margin-top: 1rem;
+    padding: 10px;
+    border-radius: 8px;
+    list-style-type: none;
+  }
+
+  .fileNameDiv {
+    display: flex;
+    flex-direction: column;
+  }
+
+  .eachFileName {
+    font-size: 2vmin;
+  }
+
+  .info-label {
+    font-weight: 600;
+    color: #a0a0a0;
+    margin-right: 5px;
+  }
+
+  .file-info-grid {
+    display: grid;
+    grid-template-columns: 1fr 1fr;
+    gap: 8px 16px;
+    margin-top: 10px;
+    color: #ddd;
+    font-size: 0.9rem;
+  }
+
+  .isfree {
+    display: flex;
+    align-items: center;
+    gap: 8px;
+  }
+
+  .takeAccess,
+  .free-now,
+  .locked-now {
+    padding: 0.5rem;
+    border: none;
+    font-size: 2.2vmin;
+    max-width: 132px;
+    max-height: 40px;
+  }
+
+  .takeAccess {
+    background-color: #7300ff;
+    color: white;
+  }
+
+.dlt-btn {
+  position: absolute;
+  top: 1rem;
+  right: 1rem;
+   width: 12vmin !important;
+}
+
+  /* =================== RESPONSIVENESS =================== */
+
+/* For screens smaller than 768px (mobile & small tablets) */
+@media screen and (max-width: 768px) {
+  .allFiles {
+    flex-direction: column;
+  }
+
+  .eachFile {
+    max-width: 100% !important;
+    width: 100%;
+  }
+
+  .file-info-grid {
+    grid-template-columns: 1fr;
+  }
+
+  .add-file-form {
+    width: 90%;
+    padding: 1rem;
+  }
+
+  .takeAccess,
+  .free-now,
+  .locked-now {
+    font-size: 3vmin;
+    width: 70%;
+  }
+
+  .btn {
+    width: 60%;
+    font-size: 1rem;
+  }
+
+  .project-block {
+    padding: 2vmax;
+    position: relative;
+  }
+
+  .eachFileName {
+    font-size: 3vmin;
+  }
+  .isfree {
+    flex-direction: column; /* Stack vertically */
+    align-items: flex-start;
+    gap: 0.5rem; /* spacing between Free + Take Access */
+  }
+
+  .takeAccess,
+  .free-now,
+  .locked-now {
+    width: 100%; /* Full width on small screens */
+    font-size: 3vmin;
+  }
+
+  .btn {
+    width: 100% !important;
+    font-size: 1rem;
+  }
+  .dlt-btn {
+    top: 0.5rem;
+    right: 0.5rem;
+    font-size: 0.6rem;
+    padding: 0.4rem 0.8rem;
+    width: 12vmin !important;
+  }
+}

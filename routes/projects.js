@@ -1,6 +1,6 @@
 const express = require("express");
 const route = express.Router();
-const {isLoggedIn} = require("../middleware")
+const {isLoggedIn, isLeaderByParams, isLeaderByQuery} = require("../middleware")
 const Team = require("../models/teamInfo");
 const Project = require("../models/project");
 const File = require("../models/files");
@@ -9,12 +9,15 @@ const user = require("../models/user");
 
 //for socket.io
 const emitToTeam = require("../utils/emitHelper");
-
 // for file delete
 //emitToTeam(io, teamId, "fileDeleted", {
 //  fileId: file._id
 //});
 //
+
+//for github fetch
+const axios = require("axios");
+
 
 
 
@@ -35,7 +38,8 @@ route.post("/dashboard/team/:id/project/new", isLoggedIn, async (req, res) => {
     return res.redirect("/dashboard");
   }
 
-  const newProject = new Project({ projName, projDescription, team: teamId });
+  const newProject = new Project({ projName, description: projDescription, team: teamId });
+  console.log(newProject)
   await newProject.save();
 
   team.project.push(newProject._id);
@@ -47,16 +51,28 @@ route.post("/dashboard/team/:id/project/new", isLoggedIn, async (req, res) => {
 
 route.get("/team/:teamId/project/:projId", isLoggedIn, async (req, res) => {
   try {
-    const { projId } = req.params;
+    const { projId, teamId } = req.params;
+
+    const team = await Team.findById(teamId);
+
+    const member = req.user._id;
+    let isMember = false;
+
+    isMember = team.members.some((ele) => {
+      return ele.toString() === member._id.toString();
+    })
 
     const project = await Project.findById(projId).populate("team");
     const files = await File.find({ project: projId })
     .populate("lockedBy")
     .populate("lastEditedBy");
 
-    console.log(project);
-    console.log(files);
-    res.render("project/eachProject", { project, files });
+  
+
+  
+
+
+    res.render("project/eachProject", { project, files, isMember});
   } catch (err) {
     console.error(err);
     res.redirect("/");
@@ -329,6 +345,26 @@ route.put("/project/:pid/stop", isLoggedIn, async(req, res) => {
   project.isWorking = false;
   await project.save();
 
+  const files = await File.find({ project: req.params.pid });
+
+  if(!files) {
+    const io = req.app.get("io");
+    io.to(project.team._id.toString()).emit("projectStatusChanged", {
+      projectId: project._id,
+      isWorking: false
+    });
+    req.flash("error", "no files present");
+    return res.redirect(req.get('referer') || '/fallback-path');
+  }
+
+  for (const file of files) {
+    file.isLocked = false;
+    file.lockedBy = null;
+    await file.save();
+  }
+
+
+
 
   const io = req.app.get("io");
   io.to(project.team._id.toString()).emit("projectStatusChanged", {
@@ -347,6 +383,104 @@ route.put("/project/:pid/stop", isLoggedIn, async(req, res) => {
 })
 
 
+route.delete("/team/:teamId/project/:projId/delete", isLoggedIn, isLeaderByParams, async (req, res) => {
+  try {
+    console.log("DELETE route hit", req.params);
+        console.log("dltt")
+    const { teamId, projId } = req.params;
+
+    const project = await Project.findById(projId);
+    if (!project) {
+      req.flash("error", "Project not found or already deleted!");
+      return res.redirect("/dashboard");
+    }
+
+    // Optional: Confirm project.team matches teamId (extra safety)
+    if (project.team.toString() !== teamId) {
+      req.flash("error", "Invalid team or project mismatch!");
+      console.log("dltt:sddddddddddd")
+      return res.redirect("/dashboard");
+      
+    }
+
+    await project.deleteOne();
+    console.log("dltt") // ✅ This will trigger pre('deleteOne') middleware
+
+    req.flash("success", "Project deleted successfully!");
+    return res.redirect('/dashboard');
+  } catch (err) {
+    console.error("Error deleting project:", err);
+    req.flash("error", "Something went wrong!");
+    return res.redirect(req.get('referer') || '/dashboard');
+  }
+});
+
+
+
+route.post("/team/:tId/project/:pId/file/github", async (req, res) => {
+  const { tId, pId } = req.params;
+  const { GITHUB_USERNAME, GITHUB_REPO, BRANCH = "main" } = req.body;
+
+  try {
+    const team = await Team.findById(tId);
+    const project = await Project.findById(pId);
+
+    if (!team || !project) {
+      return res.status(404).json({ message: "Team or project not found" });
+    }
+
+    // STEP 1: Validate repo
+    const repoCheckUrl = `https://api.github.com/repos/${GITHUB_USERNAME}/${GITHUB_REPO}`;
+    const branchCheckUrl = `https://api.github.com/repos/${GITHUB_USERNAME}/${GITHUB_REPO}/branches/${BRANCH}`;
+
+    const headers = { "User-Agent": "YourAppName" };
+
+    try {
+      await axios.get(repoCheckUrl, { headers }); // Will throw if repo not found
+      await axios.get(branchCheckUrl, { headers }); // Will throw if branch not found
+    } catch (err) {
+      const status = err.response?.status;
+      if (status === 404) {
+        req.flash("error", "GitHub repo or branch not found.");
+        return res.redirect(req.get('referer') || '/fallback-path');
+      }
+      return res.status(500).json({ message: "Error validating GitHub repo.", error: err.message });
+    }
+
+    // STEP 2: Fetch file tree
+    const githubApiUrl = `https://api.github.com/repos/${GITHUB_USERNAME}/${GITHUB_REPO}/git/trees/${BRANCH}?recursive=1`;
+
+    const response = await axios.get(githubApiUrl, { headers });
+
+    const allItems = response.data.tree || [];
+
+    const githubFiles = allItems
+      .filter(item => item.type === "blob")
+      .map(file => ({
+        name: file.path.split("/").pop(),
+        path: file.path,
+        githubUrl: `https://github.com/${GITHUB_USERNAME}/${GITHUB_REPO}/blob/${BRANCH}/${file.path}`
+      }));
+
+    for (const gFile of githubFiles) {
+      const file = new File({
+        fileName: gFile.path,
+        project: project._id,
+        githubURL: gFile.githubUrl,
+      });
+      await file.save();
+    }
+
+
+    req.flash("success", "Repo Fetched Successfully");
+    return res.redirect(req.get('referer') || '/fallback-path');
+
+  } catch (err) {
+    console.error("Error:", err.response?.data || err.message);
+    req.flash("error", "Something went wrong");
+    return res.redirect(req.get('referer') || '/fallback-path');
+}
+});
 
 
 module.exports = route;

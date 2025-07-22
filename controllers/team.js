@@ -185,8 +185,6 @@ module.exports.teamNameSuggestions = async (req, res) => {
 }
 
 
-module.exports
-
 
 
 module.exports.inviteTeamMembersForm = async (req, res) => {

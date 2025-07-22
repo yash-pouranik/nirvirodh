@@ -2,6 +2,10 @@ const mongoose = require("mongoose");
 const Schema = mongoose.Schema;
 
 const fileSchema = new Schema({
+  githubURL: {
+    type: String,
+    required: true,
+  },
   isLocked: {
     type: Boolean,
     default: false,
