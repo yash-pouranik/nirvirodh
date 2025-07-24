@@ -6,6 +6,7 @@ const passport = require("passport");
 
 
 
+
 module.exports.signupForm = (req, res) => {
     res.render("user/signup");
 }

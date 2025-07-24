@@ -1,3 +1,13 @@
+module.exports.notLoggedIn = (req, res, next) => {
+  if(req.user) {
+    return res.redirect("/dashboard");
+  } else {
+    return next();
+  }
+}
+
+
+
 module.exports.isLoggedIn = (req, res, next) => {
   if (!req.isAuthenticated || !req.isAuthenticated()) {
     req.flash("error", "You must be logged in to access that page.");
@@ -7,6 +17,7 @@ module.exports.isLoggedIn = (req, res, next) => {
 };
 
 
+const { response } = require("express");
 const Team = require("./models/teamInfo");
 
 module.exports.isLeaderByQuery = async (req, res, next) => {
