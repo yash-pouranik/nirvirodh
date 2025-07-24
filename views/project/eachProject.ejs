@@ -7,7 +7,11 @@
 <style>
 
   /* ----- Layout and Block Styling ----- */
-
+  @media screen and (max-width: 768px) {
+    .btn-close{
+      width: 10% !important;
+    }
+  }
 </style>
 
 <!-- =================== PROJECT HEADER =================== -->
@@ -16,7 +20,7 @@
   <h2 class="proj-name"><%= project.projName %></h2>
   <p class="info-highlight-box"><%= project.description %></p>
   <p class="info-highlight-box"><strong>Team:</strong> <%= project.team.teamName %></p>
-<form action="/team/<%= project.team._id %>/project/<%= project._id %>/delete?_method=DELETE" method="POST">
+<form id="deleteForm" action="/team/<%= project.team._id %>/project/<%= project._id %>/delete?_method=DELETE" method="POST">
   <button type="submit" class="btn dlt-btn">Delete</button>
 </form>
 
@@ -82,16 +86,16 @@
   <% } %>
 
   <!-- =================== ADD FILE FORM =================== -->
-  <button class="btn glow-card" onclick="addFile()">Add files</button>
+  <button class="btn glow-card" onclick="addFile()">import Repo</button>
 
   <form action="/team/<%= project.team._id %>/project/<%= project._id %>/file/github" class="add-file-form glow-card" method="post">
     <div style="text-align: right;">
       <button type="button" class="btn btn-close" onclick="closeFileForm()">×</button>
     </div>
-    <h2>Add File</h2>
+    <h2>Github Info.</h2>
     <input type="text" name="GITHUB_USERNAME" placeholder="e.g., your-name" required>
     <input type="text" name="GITHUB_REPO" placeholder="e.g., repo-name" required>
-    <input type="text" name="BRANCH" placeholder="e.g., main or master" required>
+    <input type="text" name="BRANCH" placeholder="Branch- e.g., main or master" required>
     <button class="btn glow-card">Add file</button>
   </form>
 
@@ -109,6 +113,15 @@
   function closeFileForm() {
     document.querySelector(".add-file-form").style.display = "none";
   }
+
+    document.getElementById('deleteForm').addEventListener('submit', function(e) {
+    const confirmation = confirm("Are you sure you want to delete this project?");
+    
+    if (!confirmation) {
+      // Agar user 'Cancel' dabaye to form submit nahi hoga
+      e.preventDefault();
+    }
+  });
 
 
 </script>
