@@ -419,7 +419,7 @@ route.delete("/team/:teamId/project/:projId/delete", isLoggedIn, isLeaderByParam
 
 route.post("/team/:tId/project/:pId/file/github", async (req, res) => {
   const { tId, pId } = req.params;
-  const { GITHUB_USERNAME, GITHUB_REPO, BRANCH = "main" } = req.body;
+  const { GITHUB_USERNAME, GITHUB_REPO, BRANCH = "main", GITHUB_TOKEN } = req.body;
 
   try {
     const team = await Team.findById(tId);
@@ -429,11 +429,15 @@ route.post("/team/:tId/project/:pId/file/github", async (req, res) => {
       return res.status(404).json({ message: "Team or project not found" });
     }
 
-    // STEP 1: Validate repo
+    // Headers with GitHub token
+    const headers = {
+      "User-Agent": "nirvirodh",
+      Authorization: `Bearer ${process.env.GITHUB_TOKEN}`,
+    };
+
+    // STEP 1: Validate repo and branch
     const repoCheckUrl = `https://api.github.com/repos/${GITHUB_USERNAME}/${GITHUB_REPO}`;
     const branchCheckUrl = `https://api.github.com/repos/${GITHUB_USERNAME}/${GITHUB_REPO}/branches/${BRANCH}`;
-
-    const headers = { "User-Agent": "YourAppName" };
 
     try {
       await axios.get(repoCheckUrl, { headers }); // Will throw if repo not found
@@ -449,6 +453,7 @@ route.post("/team/:tId/project/:pId/file/github", async (req, res) => {
 
     // STEP 2: Fetch file tree
     const githubApiUrl = `https://api.github.com/repos/${GITHUB_USERNAME}/${GITHUB_REPO}/git/trees/${BRANCH}?recursive=1`;
+    console.log(githubApiUrl);
 
     const response = await axios.get(githubApiUrl, { headers });
 
@@ -471,7 +476,6 @@ route.post("/team/:tId/project/:pId/file/github", async (req, res) => {
       await file.save();
     }
 
-
     req.flash("success", "Repo Fetched Successfully");
     return res.redirect(req.get('referer') || '/fallback-path');
 
@@ -479,8 +483,7 @@ route.post("/team/:tId/project/:pId/file/github", async (req, res) => {
     console.error("Error:", err.response?.data || err.message);
     req.flash("error", "Something went wrong");
     return res.redirect(req.get('referer') || '/fallback-path');
-}
+  }
 });
-
 
 module.exports = route;
